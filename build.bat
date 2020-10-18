@@ -28,7 +28,7 @@
 @echo Making LV Version
 @echo HWVER :=LV >%~dp0\utils\config.mk
 @echo LINK_FILE:=link_option_lv.tmp >>%~dp0\utils\config.mk
-@make
+make --makefile=Makefile.win
 @goto exit1
 :make_cm
 @if  exist %~dp0\firmware\CM (goto cr2)
@@ -39,7 +39,7 @@
 @echo Making CM Version
 @echo HWVER :=CM > %~dp0\utils\config.mk
 @echo LINK_FILE:=link_option_cm.tmp >> %~dp0\utils\config.mk
-@make
+make --makefile=Makefile.win
 @goto exit1
 :make_cl
 @if  exist %~dp0\firmware\CL (goto cr3)
@@ -50,7 +50,7 @@
 @echo Making CL Version
 @echo HWVER :=CL > %~dp0\utils\config.mk
 @echo LINK_FILE:=link_option_cm.tmp >> %~dp0\utils\config.mk
-@make
+make --makefile=Makefile.win
 @goto exit1
 :make_db
 @if  exist %~dp0\firmware\DB (goto cr4)
@@ -61,7 +61,7 @@
 @echo Making DB Version
 @echo HWVER :=DB > %~dp0\utils\config.mk
 @echo LINK_FILE:=link_option_cm.tmp >> %~dp0\utils\config.mk
-@make
+make --makefile=Makefile.win
 @goto exit1
 :make_gb
 @if  exist %~dp0\firmware\GB (goto cr5)
@@ -72,7 +72,7 @@
 @echo Making GB Version
 @echo HWVER :=GB > %~dp0\utils\config.mk
 @echo LINK_FILE:=link_option_cm.tmp >> %~dp0\utils\config.mk
-@make
+make --makefile=Makefile.win
 @goto exit1
 :make_clean
 @make  clean
