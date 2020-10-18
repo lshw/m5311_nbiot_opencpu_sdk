@@ -1,16 +1,16 @@
-andlink_test.c			opencpu andlink²âÊÔÊ¾ÀıÎÄ¼ş
-ct_test.c			opencpuÁ¬½ÓµçĞÅÆ½Ì¨µÄÊ¾ÀıÎÄ¼ş
-m5311_opencpu.c			opencpuÖ÷º¯ÊıËùÔÚÎÄ¼ş
-onenet_test.c			opencpu onenet²âÊÔÀı³Ì
-opencpu_base_func_demo.c	opencpu Ä£×é»ù±¾¹¦ÄÜ²âÊÔÀı³Ì
-opencpu_fota_demo.c		opencpu FOTAÀı³Ì
-opencpu_gpio_demo.c		opencpu GPIO²âÊÔÀı³Ì
-opencpu_iic_demo.c		opencpuÒÔBMP180ÎªÀıµÄIIC²âÊÔÀı³Ì
-opencpu_network_demo.c	opencpu TCP/IP½Ó¿Ú²âÊÔÀı³Ì
-opencpu_other_dev_demo.c	opencpu Ò»Ğ©ÆäËûÍâÉèµÄ²âÊÔÀı³Ì
-opencpu_rtos.c			opencpu²Ù×÷ÏµÍ³µÄÒ»Ğ©»Øµ÷º¯Êı
-opencpu_spi_demo.c		opencpu SPIÊ¹ÓÃÀı³Ì
-opencpu_uart_demo.c		opencpu´®¿ÚÊ¹ÓÃÀı³Ì
-opencpu_http.c			opencpu HTTPÊ¹ÓÃÀı³Ì
-test.cpp				ÓÃÓÚC++±àÒë²âÊÔµÄÎÄ¼ş
+andlink_test.c			opencpu andlinkæµ‹è¯•ç¤ºä¾‹æ–‡ä»¶
+ct_test.c			opencpuè¿æ¥ç”µä¿¡å¹³å°çš„ç¤ºä¾‹æ–‡ä»¶
+m5311_opencpu.c			opencpuä¸»å‡½æ•°æ‰€åœ¨æ–‡ä»¶
+onenet_test.c			opencpu onenetæµ‹è¯•ä¾‹ç¨‹
+opencpu_base_func_demo.c	opencpu æ¨¡ç»„åŸºæœ¬åŠŸèƒ½æµ‹è¯•ä¾‹ç¨‹
+opencpu_fota_demo.c		opencpu FOTAä¾‹ç¨‹
+opencpu_gpio_demo.c		opencpu GPIOæµ‹è¯•ä¾‹ç¨‹
+opencpu_iic_demo.c		opencpuä»¥BMP180ä¸ºä¾‹çš„IICæµ‹è¯•ä¾‹ç¨‹
+opencpu_network_demo.c	opencpu TCP/IPæ¥å£æµ‹è¯•ä¾‹ç¨‹
+opencpu_other_dev_demo.c	opencpu ä¸€äº›å…¶ä»–å¤–è®¾çš„æµ‹è¯•ä¾‹ç¨‹
+opencpu_rtos.c			opencpuæ“ä½œç³»ç»Ÿçš„ä¸€äº›å›è°ƒå‡½æ•°
+opencpu_spi_demo.c		opencpu SPIä½¿ç”¨ä¾‹ç¨‹
+opencpu_uart_demo.c		opencpuä¸²å£ä½¿ç”¨ä¾‹ç¨‹
+opencpu_http.c			opencpu HTTPä½¿ç”¨ä¾‹ç¨‹
+test.cpp				ç”¨äºC++ç¼–è¯‘æµ‹è¯•çš„æ–‡ä»¶
 		
