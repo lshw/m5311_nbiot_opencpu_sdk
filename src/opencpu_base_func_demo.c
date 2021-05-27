@@ -7,7 +7,7 @@
 
 #define GKI_LOG_NAME "emmi"
 #define HSL_LOG_NAME "uls"
-#define USER_GKI_LOG_PORT SERIAL_PORT_DEV_UART_0   //请在这里修改用户GKI log的输出串口，默认为USB COM1
+#define USER_GKI_LOG_PORT SERIAL_PORT_DEV_USB_COM1   //请在这里修改用户GKI log的输出串口，默认为USB COM1
 #define USER_HSL_LOG_PORT SERIAL_PORT_DEV_USB_COM2  //请在这里修改用户HSL log的输出串口，默认为USB COM2
 hal_uart_port_t  opencpu_exception_port = HAL_UART_0; //模组发生异常死机时，此变量决定输出死机信息的串口，默认为串口0
 /********************************************************************************/

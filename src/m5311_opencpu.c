@@ -253,8 +253,6 @@ void test_all_in_one()
 		 if(uart_cmd == '%')
 		 {
 			 opencpu_set_cmsysctrl(0, 2, 50, 300, 100, 800);
-			 //opencpu_set_cmsysctrl(1, 0, 0, 0, 0,0);
-			 //opencpu_set_cmsysctrl(0, 0, 0, 0, 0, 0);
 			 opencpu_printf("net state ok\n");
 			 uart_cmd = 0;
 		 }
@@ -309,17 +307,46 @@ void test_all_in_one()
         if(uart_cmd == '#')
         {
             cJSON_test();
-			opencpu_set_cmsysctrl(1, 0, 0, 0, 0, 0);
-			opencpu_set_cmsysctrl(0, 0, 0, 0, 0, 0);
 			uart_cmd = 0;
+            
         }
         if(uart_cmd == '~')
         {
-            //mqtt_test3();
-           // opencpu_printf("baud:%d",opencpu_changebaud(0, 115200));
-           opencpu_set_cmsysctrl(1, 1, 0, 0, 0, 0);
-           uart_cmd = 0;
+            mqtt_test3();
+            uart_cmd = 0;
         }
+		if(uart_cmd == 'm')
+		{
+			ril_low_power_related_info_rsp_t mlpinfo; 
+            opencpu_mlpinfo(0,&mlpinfo);
+			opencpu_unlock_light_sleep();
+			opencpu_printf("sleep_duration:%d,rx_time:%d,tx_time:%d",mlpinfo.sleep_duration,mlpinfo.rx_time,mlpinfo.tx_time);
+            uart_cmd = 0;
+
+		}
+        if(uart_cmd == 'b')
+		{
+			char a[128] = {0};
+            cmband_cfg_t test = {0,0,0,0,0,0};
+            //memset(&test, 0, sizeof(cmband_cfg_t));
+            opencpu_cmband_read(&test);
+            sprintf(a,"%d,%d,%d,%d,%d,%d", test.CFG_BAND_1, test.CFG_BAND_3, test.CFG_BAND_5, test.CFG_BAND_8, 
+            test.CFG_BAND_20, test.CFG_BAND_28);
+			opencpu_printf("band:%s\r\n",a);
+
+		    test.CFG_BAND_5 = 0;
+            opencpu_cmband_write(&test);
+
+			cmband_cfg_t test2 = {0,0,0,0,0,0};
+            opencpu_cmband_read(&test2);
+            sprintf(a,"%d,%d,%d,%d,%d,%d", test2.CFG_BAND_1, test2.CFG_BAND_3, test2.CFG_BAND_5, test2.CFG_BAND_8, 
+            test2.CFG_BAND_20, test2.CFG_BAND_28);
+            opencpu_printf("band:%s\r\n",a);
+            
+            test.CFG_BAND_5 = 1;
+            opencpu_cmband_write(&test);
+			uart_cmd = 0;
+		}
 	vTaskDelay(10);
 	}
 }
