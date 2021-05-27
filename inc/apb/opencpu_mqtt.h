@@ -1,39 +1,52 @@
-/*******************************************************************************
- 
- *******************************************************************************/
 #ifndef __CMMQTT_OC_C_
 #define __CMMQTT_OC_C_
 
-/*****************************************************
-��������:
-server : ��������ַ
-port: �˿ں�
-client_id : �ͻ�id
-keepAlive : ����ping�����
-user: �û���
-passwd:����
-clean : ����ʱ�Ƿ����֮ǰ��seesion
-���� :���óɹ�����0������ʧ�ܷ�������ֵ��
-notice :����UNINITIALED ״̬ʱ�ſɽ�������
-******************************************************/
+
+/**
+ *  \brief 配置MQTT相关参数
+ *  
+ *  \param [in] server 服务器地址
+ *  \param [in] port 端口号
+ *  \param [in] client_id 客户id
+ *  \param [in] keepAlive 发送ping包间隔
+ *  \param [in] user 用户名
+ *  \param [in] passwd 密码
+ *  \param [in]clean 连接时是否清除之前的seesion
+ *  \return 0:成功 -1：失败
+ *  
+ *  \details More details
+ */
 int opencpu_mqttcfg(char* server, uint32_t port, char* client_id,  uint32_t keepAlive, char* user, char* passwd, uint32_t clean);
 
 /*****************************************************
-��������:
-user_flag : �û���־(0-1)
-pwd_flag:   �����־(0-1)
-will_flag : willmsg��־(0-1)
-retain_flag : �־û���־(0-1)
+建立连接:
+user_flag : 用户标志(0-1)
+pwd_flag:   密码标志(0-1)
+will_flag : willmsg标志(0-1)
+retain_flag : 持久化标志(0-1)
 will_qos:  qos(0-2)
 will_topic: willmsg topic
 will_msg : willmsg
-���� :����ɹ�����0��ʧ�ܷ�������ֵ���첽����ģʽ���������ӳɹ����жϸ����Ƿ��յ�MQTTOPEN:OK
-notice: ����INITIALED ת̬�ƿɷ������ӣ����ӳɹ���״̬���ΪCONNECTED
+返回 :发起成功返回0，失败返回其他值。异步连接模式，最终连接成功需判断根据是否收到MQTTOPEN:OK
+notice: 处于INITIALED 状态时可发起连接，连接成功后状态会变为CONNECTED
 ******************************************************/
+/**
+ *  \brief 和服务器建立连接
+ *  
+ *  \param [in] user_flag 用户标志(0-1)
+ *  \param [in] pwd_flag  密码标志(0-1)
+ *  \param [in] will_flag willmsg标志(0-1)
+ *  \param [in] retain_flag 持久化标志(0-1)
+ *  \param [in] will_qos  qos(0-2)
+ *  \param [in] will_msg  willmsg
+ *  \return 0:发起连接成功 -1：失败  
+ *  
+ *  \details More details 处于INITIALED 状态时可发起连接，连接成功后状态会变为CONNECTED，异步连接模式
+ */
 int opencpu_mqttopen(uint32_t user_flag, uint32_t pwd_flag, uint32_t will_flag, uint32_t retain_flag, uint32_t will_qos, char* will_topic, char* will_msg);
 
 /*****************************************************
-��ѯ��ǰmqtt client ״̬:
+查询当前mqtt client 状态:
 state : 
 	UNINITIALED	 :0
 	INITIALED	 :1
@@ -43,83 +56,83 @@ state :
 	CONNECTED    :5
 	NET_CONNECTING: 6
 	NET_CONNECTED :7
-���� :state ״ֵ̬
-notice: �ɸ��ݵ�ǰת̬���к����Ĳ���
+返回 :state 状态值
+notice: 可根据当前状态进行合理的操作
 ******************************************************/
 int opencpu_mqttstat();
 
 /*****************************************************
-����topic:
-topic : ���ĵ�topic����
+订阅topic:
+topic : 订阅的topic名字
 qos:  (0-2)
-user_recvpubcb: �����ͻ���ɵĻص�����,�������յ�������Ϣ����ʹ��ʱ����NULL
-���� :���óɹ�����0������ʧ�ܷ�������ֵ��
-notice: ����CONNNECTED ״̬ʱ���Է���
+user_recvpubcb: 留给客户完成的回调函数,处理接收到推送消息，不使用时输入NULL
+返回 :配置成功返回0，配置失败返回其他值。
+notice: 处于CONNNECTED 状态时可以发送
 ******************************************************/
 int opencpu_mqttsub(char *topic, uint32_t qos, void(*user_recvpubcb));
 
 /*****************************************************
-ȡ������topic:
-topic : ȡ�����ĵ�topic����
-���� :���óɹ�����0������ʧ�ܷ�������ֵ��
-notice: notice: ����CONNNECTED ״̬ʱ���Է���
+取消订阅topic:
+topic : 取消订阅的topic名字
+返回 :配置成功返回0，配置失败返回其他值。
+notice: notice: 处于CONNNECTED 状态时可以发送
 ******************************************************/
 int opencpu_mqttunsub(char *topic, uint32_t qos);
 
 /*****************************************************
-������Ϣ:
-topic: topic����
+推送信息:
+topic: topic名字
 qos:  (0-2) 
 retain: (0-1)
 dup: 	(0-1)
-msg_len: 0: ���ַ�����ʽ���ͣ���0 :��hex��ʽ���ͣ�ע�ⷢ�ͳ�����msg��Ӧ
-msg: �����͵���Ϣ��
-user_ackcb: �����ͻ���ɵĻص�������������Ϣ�յ�ack��ᴥ���ú���,��ʹ��ʱ����NULL
-���� :����ɹ�����0��ʧ�ܷ�������ֵ��
-notice: ����CONNNECTED ״̬ʱ���Է���
+msg_len: 0: 以字符串形式发送；非0 :以hex形式发送，注意发送长度与msg对应
+msg: 待发送的信息。
+user_ackcb: 留给客户完成的回调函数，推送信息收到ack后会触发该函数,不使用时输入NULL
+返回 :发起成功返回0，失败返回其他值。
+notice: 处于CONNNECTED 状态时可以发送
 ******************************************************/
 int opencpu_mqttpub(char *topic, uint32_t qos, uint32_t retain, uint32_t dup, uint32_t msg_len, char *msg, void(*user_ackcb));
 
 /*****************************************************
-�Ͽ�����:
-���� :�ɹ�����0��
-notice: ����CONNNECTED ״̬ʱ���Խ��жϿ��������Ͽ��ɹ����ΪDISCONNECTED״̬
+断开连接:
+返回 :成功返回0。
+notice: 处于CONNNECTED 状态时可以进行断开操作，断开成功后变为DISCONNECTED状态
 ******************************************************/
 int opencpu_mqttdisc();
 
 /*****************************************************
-�ͷ���Դ:
-���� :�ɹ�����0��
-notice: ����CONNNECTED ״̬ʱ���Խ��жϿ�����
+释放资源:
+返回 :成功返回0。
+notice: 处于CONNNECTED 状态时可以进行断开操作
 ******************************************************/
 int opencpu_mqttdel();
 
 
 /******************************************************
-�����ǻص������ı�д˵��: �����첽�������ݣ�Ŀǰ�������ֻص�����:
-1: publish ack �Ļص�����: ����qos>1��������Ϣ���յ�ack��ᴥ����
-���͵Ļص��������û��ɸ����Լ�����Ҫ��ÿһ�����Ͱ���д����Ļص�������
-����һ�α�д���ɵĻص�������������ַ����opencpu_mqttpub �����һ������
-���ɡ�����
+以下是回调函数的编写说明: 对于异步接收数据，目前开放两种回调函数:
+1: publish ack 的回调函数: 对于qos>1的推送信息，收到ack后会触发该
+类型的回调函数，用户可根据自己的需要对每一个推送包编写所需的回调函数，
+可以一次编写若干的回调函数，函数地址传入opencpu_mqttpub 的最后一个参数
+即可。例如
 void opencpu_recvpuback_cb()
 {
 	opencpu_printf("OC get excepted ack\n");
 }
 /*********************************************************************
- 2�����յ�ĳһtopic������Ϣ�Ļص���������һ��Ĭ�ϵĻص��������û��ɷ���
- �ú���(opencpu_defaultpublish_cb)��д��������Ļص�����,
+ 2，接收到某一topic推送信息的回调函数，有一个默认的回调函数，用户可仿造
+ 该函数(opencpu_defaultpublish_cb)编写其它所需的回调函数,
 /******************************************************************
-opencpu_defaultpublish_cb : Ĭ�ϵ�һ���첽�ص����������յ��������·�������ʱ�ᴥ���ú�����
-dup: 0 ���ظ�����1���ظ��� 
+opencpu_defaultpublish_cb : 默认的一个异步回调函数，接收到服务器下发的数据时会触发该函数，
+dup: 0 非重复包，1，重复包 
 qos:  (0-2) 
 retain: (0-1)
-topicname: topic����
-msgid:�������·��İ����
-msg_len: ���յ������ݳ��� 
-msg: �������·�������
-notice: �ͻ��ڶ�������(opencpu_mqttsub)ʱ�������һ������ΪNULLʱ��
-�յ�����Ĭ�ϵ��øú��������û����ĳtopic���Լ��Ĵ������ο��ú���
-����д�µĻص���������opencpu_mqttsub���ɡ�
+topicname: topic名字
+msgid:服务器下发的包序号
+msg_len: 接收到的数据长度 
+msg: 服务器下发的数据
+notice: 客户在订阅主题(opencpu_mqttsub)时，若最后一个参数为NULL时，
+收到数据默认调用该函数；若用户针对某topic有自己的处理，参考该函数
+重新写新的回调函数传入opencpu_mqttsub即可。
 /*****************************************************/
 void opencpu_defaultpublish_cb(uint32_t dup, uint32_t qos, uint32_t retained, uint32_t msgid, char *topicname, uint32_t msglen, char *msg);
 

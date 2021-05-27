@@ -339,9 +339,9 @@ typedef enum {
     RIL_CMD_ID_MSPN,    /**< AT command *MSPN. */
     RIL_CMD_ID_MUNSOL,    /**< AT command *MUNSOL. */
     RIL_CMD_ID_MGCOUNT,    /**< AT command *MGCOUNT. */
+    RIL_CMD_ID_MCGDEFCONT,    /**< AT command *MCGDEFCONT. */
 #ifndef __RIL_CMD_SET_SLIM_ENABLE__
     RIL_CMD_ID_MGSINK,    /**< AT command *MGSINK. */
-    RIL_CMD_ID_MCGDEFCONT,    /**< AT command *MCGDEFCONT. */
     RIL_CMD_ID_MGTCSINK,    /**< AT command *MGTCSINK. */
     RIL_CMD_ID_MSACL,    /**< AT command *MSACL. */
     RIL_CMD_ID_MLACL,    /**< AT command *MLACL. */
@@ -422,6 +422,8 @@ typedef enum {
     RIL_CMD_ID_MCGSN,    /**< AT command: *MCGSN. */
     RIL_CMD_ID_MUPDIR,    /**< AT command *MUPDIR. */
     RIL_CMD_ID_MTC,    /**< AT command: *MTC. */
+    RIL_CMD_ID_MSMSCOUNT,    /**< AT command *MSMSCOUNT */
+    RIL_CMD_ID_MLPINFO,    /**< AT command *MLPINFO */
 
     RIL_CMD_ID_CUSTOM_CMD,
     RIL_CMD_ID_CUSTOM_CMD_URC,
@@ -437,7 +439,8 @@ typedef enum {
     RIL_URC_ID_TEST,
 
     RIL_URC_ID_CREG,    /**< +CREG. */
-    RIL_URC_ID_CTZR,    /**< +CTZR. */
+    RIL_URC_ID_CTZV,    /**< +CTZV. */
+    RIL_URC_ID_CTZE,    /**< +CTZE. */
     RIL_URC_ID_CGEV,    /**< +CGEV. */
     RIL_URC_ID_CGREG,    /**< +CGREG. */
     RIL_URC_ID_CEREG,    /**< +CEREG. */
@@ -480,6 +483,15 @@ typedef enum {
     RIL_URC_ID_END,    /**< End of the URC event ID enumeration. */
     RIL_URC_ID_INVALID = RIL_URC_ID_END,    /**< Indicates an invalid URC event ID. */
 } ril_urc_id_t;
+
+typedef struct {
+    bool CFG_BAND_1;
+    bool CFG_BAND_3;
+    bool CFG_BAND_5;
+    bool CFG_BAND_8;
+    bool CFG_BAND_20;
+    bool CFG_BAND_28;
+} cmband_cfg_t;
 
 /**
  * @}
@@ -1465,19 +1477,27 @@ extern ril_status_t ril_request_automatic_time_zone_update(ril_request_mode_t mo
 
 
 /* AT command: AT+CTZR */
-/* URC: +CTZR */
+/* URC: +CTZV, +CTZE */
 /** 
  * @addtogroup ril_structure Structure
  * @{
  */
 /**
- * @brief This defines data structure for URC of "+CTZR".
+ * @brief This defines data structure for URC of "+CTZV".
+ */
+typedef struct {
+    char *tz;  /**< The local time zone. */
+} ril_time_zone_reporting_urc_t;
+
+/**
+ * @brief This defines data structure for URC of "+CTZE".
  */
 typedef struct {
     char *tz;  /**< The local time zone. */
     int32_t dst; /**< The daylight savings adjustment. */
     char *time;  /**< The local time. The format is "YYYY/MM/DD,hh:mm:ss". */
-} ril_time_zone_reporting_urc_t;
+} ril_time_zone_reporting_ext_urc_t;
+
 
 /**
  * @brief This defines data structure for AT response of "+CTZR".
@@ -5729,31 +5749,41 @@ extern ril_status_t ril_request_test_config(ril_request_mode_t mode,
         ril_cmd_response_callback_t callback,
         void *user_data);
 
+/* AT command: AT*MLPINFO */
+/** 
+ * @addtogroup ril_structure Structure
+ * @{
+ */
+/**
+ * @brief This defines data structure as an entry for AT response of "*MLPINFO".
+ */
 typedef struct {
-    char *pattern;
-    int32_t token;
-    int32_t command;
-    int32_t length;
-    char *parameter;
-} ril_radio_call_req_t;
+    int32_t sleep_duration;    /**< Integer value indicating the total sleep duration from latest boot up. */
+    int32_t rx_time;    /**< Integer type indicating the total RX time from the latest boot up. */
+    int32_t tx_time;    /**< Integer type indicating the total TX time from the latest boot up. */
+} ril_low_power_related_info_rsp_t;
+/**
+ * @}
+ */
 
-typedef struct {
-    char *pattern;
-    int32_t token;
-    int32_t command;
-    int32_t length;
-    char *cnf_result;
-} ril_radio_call_rsp_t;
-/*AT*MCAL*/
-extern ril_status_t ril_request_radio_call(ril_request_mode_t mode,
-        ril_radio_call_req_t *req,
+/** 
+ * @brief This function sends an AT command "*MLPINFO".
+ * @param[in] mode    AT command mode setting. 
+ * @param[in] cfg_mode    Subparameter for this AT command, indicates the query mode.
+ * @param[in] callback    is a response callback function, including the result code and sub-parameters of AT response data string.
+ *                                   For more information about sub-parameters data structure, please refer to #ril_low_power_related_info_rsp_t.
+ * @param[in] user_data    A pointer to the user data.
+ * @return #RIL_STATUS_SUCCESS, the operation completed successfully.
+ *             #RIL_STATUS_FAIL, the operation has failed.
+ *             #RIL_STATUS_INVALID_PARAM, invalid sub-parameter.
+ */
+extern ril_status_t ril_request_low_power_related_info(
+        ril_request_mode_t mode,
+        int32_t cfg_mode,
         ril_cmd_response_callback_t callback,
         void *user_data);
-/*AT*MCALDEV*/
-extern ril_status_t ril_request_enter_exit_rf_calibration_state(ril_request_mode_t mode,
-        int32_t caldev_state,
-        ril_cmd_response_callback_t callback,
-        void *user_data);
+
+
 #ifdef __cplusplus
 }
 #endif

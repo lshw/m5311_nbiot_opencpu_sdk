@@ -104,7 +104,7 @@ extern int opencpu_ct_new(char *server, char *port);
 * 参  数:
           mode: 注册至平台后，平台下发消息接收模式  0  //自动接收模式 (default)
 		  										 1  //手动接收模式
-          keepalivetime:  设备自动向平台更新在线状态周期
+          keepalivetime:  设备自动向平台更新在线状态周期,单位秒
 * 返回值:
           1: 注册成功
           0: 注册失败
